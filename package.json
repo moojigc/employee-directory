@@ -2,10 +2,12 @@
   "name": "employee-directory",
   "version": "1.0.0",
   "description": "> Developed by Moojig Battsogt.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "build": "cd client && npm run build",
     "watch": "concurrently \"nodemon server.js\" \"cd client && npm start\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +32,12 @@
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
+    "axios": "^0.19.2",
+    "materialize-css": "^1.0.0-rc.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1",
     "concurrently": "^5.2.0"
   }
 }
