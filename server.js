@@ -24,22 +24,26 @@ Store.on("error", (error) => console.log(error));
 
 const app = express();
 app.use(express.static(join(__dirname, "client/build")))
-	.use(compression())
 	.use(express.urlencoded({ extended: true }))
 	.use(express.json())
 	// Session middleware
+	.use(cors({ credentials: true, origin: "http://localhost:3000" }))
 	.use(
 		session({
 			secret: process.env.SESS_SECRET || "deku",
-			resave: true,
-			saveUninitialized: false,
+			resave: false,
+			saveUninitialized: true,
 			store: Store,
-			sameSite: true
+			cookie: {
+				sameSite: true,
+				httpOnly: true,
+				secure: false
+			}
 		})
 	)
 	.use(passport.initialize())
 	.use(passport.session())
-	.use(cors({ credentials: true }));
+	.use(compression());
 // Set routes
 require("./server/routes/api-router")(app);
 app.get("*", (req, res) => {

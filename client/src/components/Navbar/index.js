@@ -1,34 +1,53 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
+import UserContext from "../../utils/UserContext";
 import "./index.css";
+import axios from "axios";
 
-const Navbar = () => {
+const Navbar = ({ setFlash, setUser }) => {
+	const user = useContext(UserContext);
 	const location = useLocation();
+	const handleLogout = async () => {
+		let { data } = await axios.get("/api/logout", { withCredentials: true });
+		setFlash(data.message);
+		setUser({ username: "", _id: null, auth: false });
+	};
 	return (
 		<nav>
 			<div className="nav-wrapper">
-				<Link to="/" className="brand-logo" style={{ marginLeft: "1rem" }}>
+				<Link
+					to="/"
+					id="logo-desktop"
+					className="brand-logo left"
+					style={{ marginLeft: "1rem" }}>
 					Employee Directory
 					<i className="material-icons">people_outline</i>
 				</Link>
-				<ul id="nav-mobile" className="right hide-on-med-and-down">
-					<li>
-						<Link
-							to="/login"
-							className={location.pathname === "/login" ? "active" : ""}>
-							Login
-						</Link>
+				<Link
+					to="/"
+					id="logo-mobile"
+					className="brand-logo left"
+					style={{ marginLeft: "1rem" }}>
+					<i className="material-icons">people_outline</i>
+				</Link>
+				<ul id="nav-mobile" className="right">
+					<li className={location.pathname === "/login" ? "active" : ""}>
+						{user.auth ? (
+							<Link to="/login" onClick={handleLogout}>
+								Logout
+							</Link>
+						) : (
+							<Link to="/login">Login</Link>
+						)}
 					</li>
-					<li>
-						<Link
-							to="/register"
-							className={location.pathname === "/register" ? "active" : ""}>
-							Register
-						</Link>
+					<li className={location.pathname === "/register" ? "active" : ""}>
+						<Link to="/register">Register</Link>
 					</li>
-					<li>
-						<Link to="/employees">Employees</Link>
-					</li>
+					{user.auth ? (
+						<li className={location.pathname === "/employees" ? "active" : ""}>
+							<Link to="/employees">Employees</Link>
+						</li>
+					) : null}
 				</ul>
 			</div>
 		</nav>

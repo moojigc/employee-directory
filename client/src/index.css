@@ -18,3 +18,19 @@ input {
 label {
 	color: lightgray !important;
 }
+header {
+	border-radius: 0.25rem 0.25rem 0 0;
+	text-align: center;
+	background-color: var(--accent);
+	padding: 1rem;
+}
+header h1 {
+	font-family: var(--fancy-font);
+	margin: 0;
+	font-size: 3rem;
+}
+@media screen and (max-width: 992px) {
+	:root {
+		font-size: 16px;
+	}
+}

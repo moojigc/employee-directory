@@ -1,6 +1,19 @@
 nav {
-	background: var(--accent) !important;
+	background: var(--primary) !important;
 }
 .brand-logo {
 	font-family: var(--fancy-font);
+}
+
+#logo-desktop {
+	display: none;
+}
+
+@media screen and (min-width: 992px) {
+	#logo-mobile {
+		display: none;
+	}
+	#logo-desktop {
+		display: block;
+	}
 }

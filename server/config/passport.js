@@ -7,7 +7,8 @@ passport.use(
 	new LocalStrategy({ usernameField: "username" }, async (username, password, done) => {
 		// Check username
 		let user = await User.findOne({ username: username });
-		if (!user) return done(null, false, { message: "No user found by that username." });
+		console.log(user);
+		if (!user) return done(null, false);
 		else {
 			// Check password
 			bcrypt.compare(password, user.password, (err, isMatch) => {
@@ -15,7 +16,7 @@ passport.use(
 				if (isMatch) {
 					return done(null, user);
 				} else {
-					return done(null, false, { message: "Password incorrect." });
+					return done(null, false);
 				}
 			});
 		}
