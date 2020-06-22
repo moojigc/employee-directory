@@ -1,17 +1,12 @@
-const { User } = require("../models/");
+const { User, Employee } = require("../models/");
 
 /**
  * Respond to /api/ calls from the client
  * @param {import("express").Router} router
  */
 module.exports = (router) => {
-	router.get("/api/employees", (req, res) => {
-		const employees = [
-			{
-				name: "Moojig",
-				job: "nothing"
-			}
-		];
+	router.get("/api/employees", async (req, res) => {
+		const employees = await Employee.find({});
 		res.status(200).json(employees).end();
 	});
 	router.post("/api/register", async ({ body }, res) => {

@@ -1,0 +1,6 @@
+.wrapper {
+	margin-top: 1rem !important;
+	background: var(--primary);
+	border-radius: 0.25rem;
+	color: whitesmoke;
+}

@@ -22,7 +22,7 @@ passport.use(
 	})
 );
 passport.serializeUser((user, done) => {
-	done(null, user._id);
+	done(null, { id: user._id, username: user.username });
 });
 passport.deserializeUser((obj, done) => {
 	done(null, obj);

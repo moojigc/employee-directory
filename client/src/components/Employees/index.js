@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getEmployees } from "../../utils/api";
+import Container from "../Container";
+import "./index.css";
 
 const Employees = () => {
 	const [employees, setEmployees] = useState([]);
@@ -13,14 +15,14 @@ const Employees = () => {
 		getAllEmployees();
 	}, []);
 	return (
-		<main>
+		<Container>
 			<header className="teal">Employees</header>
 			<ul>
 				{employees.map((em) => (
-					<li>{em.name}</li>
+					<li>{em.firstName + em.lastName}</li>
 				))}
 			</ul>
-		</main>
+		</Container>
 	);
 };
 

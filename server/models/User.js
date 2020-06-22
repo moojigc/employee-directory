@@ -34,7 +34,13 @@ const UserSchema = new Schema({
 	createdAt: {
 		type: Date,
 		default: Date.now
-	}
+	},
+	employees: [
+		{
+			type: Array,
+			ref: "Employee"
+		}
+	]
 });
 
 UserSchema.methods.encryptPass = async function () {

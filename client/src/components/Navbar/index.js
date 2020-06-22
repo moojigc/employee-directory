@@ -7,20 +7,27 @@ const Navbar = () => {
 	return (
 		<nav>
 			<div className="nav-wrapper">
-				<Link to="/" className="brand-logo">
-					<i className="material-icons">people_outline</i>
+				<Link to="/" className="brand-logo" style={{ marginLeft: "1rem" }}>
 					Employee Directory
+					<i className="material-icons">people_outline</i>
 				</Link>
 				<ul id="nav-mobile" className="right hide-on-med-and-down">
 					<li>
 						<Link
-							href="/login"
+							to="/login"
 							className={location.pathname === "/login" ? "active" : ""}>
 							Login
 						</Link>
 					</li>
 					<li>
-						<Link href="/employees">Employees</Link>
+						<Link
+							to="/register"
+							className={location.pathname === "/register" ? "active" : ""}>
+							Register
+						</Link>
+					</li>
+					<li>
+						<Link to="/employees">Employees</Link>
 					</li>
 				</ul>
 			</div>
