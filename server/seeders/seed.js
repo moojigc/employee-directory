@@ -63,11 +63,17 @@ const employees = [
 		department: "Graphics"
 	}
 ];
-connect("mongodb://localhost/employee-directory").then((conn) => {
-	Employee.deleteMany({}).then(() => {
+connect(process.env.MONGODB_URI || "mongodb://localhost/employee-directory").then((conn) => {
+	if (process.env.NODE_ENV === "production") {
 		Employee.insertMany(employees).then((res) => {
-			console.log(res);
 			disconnect();
 		});
-	});
+	} else {
+		Employee.deleteMany({}).then(() => {
+			Employee.insertMany(employees).then((res) => {
+				console.log(res);
+				disconnect();
+			});
+		});
+	}
 });
