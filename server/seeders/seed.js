@@ -3,22 +3,64 @@ const { connect, disconnect } = require("mongoose");
 
 const employees = [
 	{
-		firstName: "尚文",
-		lastName: "岩谷",
-		title: "盾の勇者",
-		department: "Shield"
+		firstName: "Aoba",
+		lastName: "Suzukaze",
+		title: "Character Designer",
+		department: "Graphics"
 	},
 	{
-		firstName: "ラフタリア",
-		lastName: "岩谷",
-		title: "尚文の剣",
-		department: "Sword"
+		firstName: "Kou",
+		lastName: "Yagami",
+		title: "Art Director",
+		department: "Graphics"
 	},
 	{
-		firstName: "フィーロ",
-		lastName: "岩谷",
-		title: "フィロリアルの女王",
-		department: "Magic"
+		firstName: "Hifumi",
+		lastName: "Takimoto",
+		title: "Character Design Team Leader",
+		department: "Graphics"
+	},
+	{
+		firstName: "Rin",
+		lastName: "Touyama",
+		title: "Assistant Producer",
+		department: "Production"
+	},
+	{
+		firstName: "Umiko",
+		lastName: "Ahagon",
+		title: "Chief Programmer",
+		department: "Programming"
+	},
+	{
+		firstName: "Nene",
+		lastName: "Sakura",
+		title: "Intern Programmer",
+		department: "Programming"
+	},
+	{
+		firstName: "Hajime",
+		lastName: "Shinoda",
+		title: "Motion Designer",
+		department: "Motion"
+	},
+	{
+		firstName: "Tsubame",
+		lastName: "Narumi",
+		title: "Intern Programmer",
+		department: "Programming"
+	},
+	{
+		firstName: "Momiji",
+		lastName: "Mochizuki",
+		title: "Intern Character Designer",
+		department: "Graphics"
+	},
+	{
+		firstName: "Yun",
+		lastName: "Iijima",
+		title: "Character Designer",
+		department: "Graphics"
 	}
 ];
 connect("mongodb://localhost/employee-directory").then((conn) => {
