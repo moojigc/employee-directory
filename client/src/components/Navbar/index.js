@@ -9,8 +9,8 @@ const Navbar = ({ setFlash, setUser }) => {
 	const location = useLocation();
 	const handleLogout = async () => {
 		let { data } = await axios.get("/api/logout", { withCredentials: true });
-		setFlash(data.message);
-		setUser({ username: "", _id: null, auth: false });
+		setFlash(data.flash);
+		setUser({ username: "Guest", _id: null, auth: false });
 	};
 	return (
 		<nav>
@@ -40,14 +40,21 @@ const Navbar = ({ setFlash, setUser }) => {
 							<Link to="/login">Login</Link>
 						)}
 					</li>
-					<li className={location.pathname === "/register" ? "active" : ""}>
-						<Link to="/register">Register</Link>
-					</li>
+					{user.auth ? null : (
+						<li className={location.pathname === "/register" ? "active" : ""}>
+							<Link to="/register">Register</Link>
+						</li>
+					)}
 					{user.auth ? (
 						<li className={location.pathname === "/employees" ? "active" : ""}>
 							<Link to="/employees">Employees</Link>
 						</li>
 					) : null}
+					{user.auth ? null : (
+						<li className={location.pathname === "/demo" ? "active" : ""}>
+							<Link to="/demo">Demo</Link>
+						</li>
+					)}
 				</ul>
 			</div>
 		</nav>

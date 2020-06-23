@@ -7,7 +7,6 @@ passport.use(
 	new LocalStrategy({ usernameField: "username" }, async (username, password, done) => {
 		// Check username
 		let user = await User.findOne({ username: username });
-		console.log(user);
 		if (!user) return done(null, false);
 		else {
 			// Check password
@@ -16,7 +15,7 @@ passport.use(
 				if (isMatch) {
 					return done(null, user);
 				} else {
-					return done(null, false);
+					return done({ message: "Incorrect password." }, false);
 				}
 			});
 		}

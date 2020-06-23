@@ -28,10 +28,13 @@ const Login = ({ flash, setFlash, setUser }) => {
 				data: user,
 				withCredentials: true
 			});
-			if (data.auth) {
-				setFlash(data.message);
-				setUser(data);
+			console.log(data);
+			if (data.user.auth) {
+				setFlash(data.flash);
+				setUser({ ...data.user });
 				history.push("/");
+			} else {
+				setFlash(data.flash);
 			}
 		} catch (error) {
 			console.log(error);
@@ -41,7 +44,7 @@ const Login = ({ flash, setFlash, setUser }) => {
 		<Container>
 			<Header>Login</Header>
 			<Main>
-				{flash !== "" ? <Alert type={"error"}>{flash}</Alert> : null}
+				{flash.message !== "" ? <Alert type={flash.type}>{flash.message}</Alert> : null}
 				<form className="col s12">
 					<div className="row">
 						<div className="input-field col s12">

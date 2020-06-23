@@ -1,4 +1,33 @@
-main {
-	border-radius: 0.25rem;
-	background: var(--primary);
+.collection .collection-item {
+	/* background-color: var(--transluscent); */
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: black;
+	padding: 1rem;
+}
+.collection {
+	box-shadow: 0 0 1rem 0.5rem #00000052;
+}
+
+.collection-item button {
+	display: flex;
+	justify-content: center;
+}
+
+/* li p {
+	margin: 0;
+} */
+
+select.browser-default {
+	background: transparent;
+	color: white;
+}
+option {
+	background: transparent;
+	color: black;
+}
+main .row .col {
+	margin: 0;
+	padding: 0;
 }
