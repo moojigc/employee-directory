@@ -11,6 +11,10 @@ module.exports = (router) => {
 		const employees = await Employee.find({});
 		res.status(200).json(employees).end();
 	});
+	router.get("/api/employees-demo", async (req, res) => {
+		const employees = await Employee.find({ company: "Demo" });
+		res.status(200).json(employees).end();
+	});
 	router.post("/api/register", async ({ body }, res) => {
 		if (body.password === body.password2) {
 			let user = new User({
@@ -29,18 +33,43 @@ module.exports = (router) => {
 	});
 	router.post("/api/login", (req, res, next) => {
 		passport.authenticate("local", function (err, user, info) {
-			console.log(info);
 			if (err) {
-				return next(err);
+				return res.json({
+					flash: {
+						...err,
+						type: "error"
+					},
+					user: {
+						auth: false
+					}
+				});
 			}
 			if (!user) {
-				return res.json({ message: "User not found.", auth: false });
+				return res.json({
+					flash: {
+						message: "User not found.",
+						type: "error"
+					},
+					user: {
+						auth: false
+					}
+				});
 			}
 			req.logIn(user, function (err) {
 				if (err) {
 					return next(err);
 				}
-				return res.json({ message: `Welcome, ${req.user.username}!`, auth: true });
+				return res.json({
+					user: {
+						_id: user._id,
+						username: user.username,
+						auth: true
+					},
+					flash: {
+						type: "success",
+						message: `Welcome, ${req.user.username}!`
+					}
+				});
 			});
 		})(req, res, next);
 	});
@@ -59,6 +88,15 @@ module.exports = (router) => {
 	});
 	router.get("/api/logout", (req, res) => {
 		req.logout();
-		res.json({ message: "Logged out.", auth: false, redirect: "/login" });
+		res.json({
+			user: {
+				auth: false
+			},
+			flash: {
+				message: "Logged out.",
+				type: "success"
+			},
+			redirect: "/login"
+		});
 	});
 };

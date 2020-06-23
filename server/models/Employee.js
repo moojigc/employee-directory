@@ -23,8 +23,13 @@ const EmployeeSchema = new Schema({
 		default: Date.now
 	},
 	manager: {
-		type: Schema.Types.ObjectId,
-		required: true
+		type: Schema.Types.ObjectId
+	},
+	company: {
+		type: String,
+		required: true,
+		trim: true,
+		default: "Demo"
 	}
 });
 const Employee = model("Employee", EmployeeSchema);

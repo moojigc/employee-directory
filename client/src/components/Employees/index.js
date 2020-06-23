@@ -1,54 +1,76 @@
 import React, { useEffect, useState, useContext } from "react";
+import { useLocation } from "react-router-dom";
+import FlashContext from "../../utils/FlashContext";
 import { getEmployees } from "../../utils/api";
 import Container from "../Container";
-import "./index.css";
 import Header from "../Header";
 import Main from "../Main";
 import UserContext from "../../utils/UserContext";
-import Preloader from "../Preloader";
+import { FormSelect } from "materialize-css";
+import "./index.css";
+import Select from "./Select";
+import List from "./List";
 
 const Employees = () => {
+	const location = useLocation();
 	const user = useContext(UserContext);
+	const [departments, setDepartments] = useState([]);
 	const [employees, setEmployees] = useState([]);
+	const [emFilter, setFilter] = useState([]);
 	const getAllEmployees = () => {
-		getEmployees().then(({ data }) => {
+		getEmployees(location.pathname === "/demo" ? true : false).then(({ data }) => {
 			setEmployees(data);
+			setFilter(data);
+			setDepartments(
+				data
+					.map(({ department }) => department)
+					.filter((dept, i, thisArray) => thisArray.indexOf(dept) === i)
+			);
+			// MaterializeCSS dependency
+			FormSelect.init(document.querySelectorAll("select"));
 		});
 	};
+	const flash = useContext(FlashContext);
+	const handleSearch = ({ target }) => {
+		setFilter(
+			employees.filter((em) =>
+				new RegExp(target.value, "i").test(
+					em.firstName + em.lastName + em.department + em.title
+				)
+			)
+		);
+	};
+	const handleFilter = ({ target }) => {
+		if (target.value === "All") setFilter(employees);
+		else setFilter(employees.filter((em) => new RegExp(em.department, "i").test(target.value)));
+	};
 	useEffect(() => {
-		if (user.auth) {
-			getAllEmployees();
-		}
-	}, [user]);
+		getAllEmployees();
+	}, []);
 	return (
 		<Container>
-			<Header>Employees</Header>
+			<Header>
+				{user.username || flash.message
+					? `Welcome, ${user.username}` || flash.message
+					: "Employees"}
+			</Header>
 			<Main padding="1rem 2rem">
-				<ul className={employees.length > 0 ? "collection" : ""}>
-					{employees.length > 0 ? (
-						employees.map((em) => (
-							<li
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-									alignItems: "center",
-									color: "black"
-								}}
-								className="collection-item"
-								key={em._id}>
-								<div>
-									<p>{`${em.title}: ${em.firstName} ${em.lastName}`}</p>
-									<p>Department: {em.department}</p>
-								</div>
-								<button className="btn waves-effect waves-light">
-									<i className="material-icons">menu</i>
-								</button>
-							</li>
-						))
-					) : (
-						<Preloader />
-					)}
-				</ul>
+				<div className="col s6 input-field">
+					<input
+						onChange={handleSearch}
+						type="text"
+						placeholder="Search by name, title, or department"
+					/>
+				</div>
+				<div className="row" style={{ display: "flex", justifyContent: "center" }}>
+					<Select
+						options={departments}
+						handleFilter={handleFilter}
+						label="Department"
+						defaultOption="All"
+					/>
+				</div>
+				<List emFilter={emFilter} />
 			</Main>
 		</Container>
 	);
