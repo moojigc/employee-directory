@@ -12,7 +12,7 @@ module.exports = (router) => {
 		res.status(200).json(employees).end();
 	});
 	router.get("/api/employees-demo", async (req, res) => {
-		const employees = await Employee.find({ company: "Demo" });
+		const employees = await Employee.find({ company: "Eagle Jump" });
 		res.status(200).json(employees).end();
 	});
 	router.post("/api/register", async ({ body }, res) => {
@@ -98,5 +98,42 @@ module.exports = (router) => {
 			},
 			redirect: "/login"
 		});
+	});
+	router.post("/api/employees", async (req, res) => {
+		if (!req.user)
+			return res.json({
+				flash: {
+					type: "error",
+					message: "You need to be logged in to add an employee."
+				},
+				redirect: "/login"
+			});
+		try {
+			let response = await Employee.create(req.body);
+			res.json({
+				flash: {
+					message: "Successfully added employee!",
+					type: "success"
+				},
+				employee: req.body
+			});
+		} catch (error) {
+			console.log(error);
+			if (error._message === "Employee validation failed") {
+				res.json({
+					flash: {
+						type: "error",
+						message: "Missing fields."
+					}
+				});
+			} else {
+				res.json({
+					flash: {
+						type: "error",
+						message: "Database error."
+					}
+				});
+			}
+		}
 	});
 };

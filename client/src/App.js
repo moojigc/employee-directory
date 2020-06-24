@@ -26,9 +26,13 @@ function App() {
 			<UserContext.Provider value={user}>
 				<FlashContext.Provider value={flash}>
 					<Navbar setFlash={setFlash} setUser={setUser} />
-					<Route exact path="/" component={Employees} />
-					<Route exact path="/demo" component={Employees} />
-					<Route exact path="/employees" component={Employees} />
+					<Route exact path="/" component={() => <Employees setFlash={setFlash} />} />
+					<Route exact path="/demo" component={() => <Employees setFlash={setFlash} />} />
+					<Route
+						exact
+						path="/employees"
+						component={() => <Employees setFlash={setFlash} />}
+					/>
 					<Route exact path="/register" component={Register} />
 					<Route
 						exact

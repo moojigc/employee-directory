@@ -36,9 +36,7 @@ const Navbar = ({ setFlash, setUser }) => {
 							<Link to="/login" onClick={handleLogout}>
 								Logout
 							</Link>
-						) : (
-							<Link to="/login">Login</Link>
-						)}
+						) : null}
 					</li>
 					{user.auth ? null : (
 						<li className={location.pathname === "/register" ? "active" : ""}>

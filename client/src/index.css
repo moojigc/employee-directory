@@ -13,7 +13,7 @@ body {
 	background: var(--secondary);
 }
 input {
-	color: whitesmoke !important;
+	color: whitesmoke;
 }
 label {
 	color: lightgray !important;

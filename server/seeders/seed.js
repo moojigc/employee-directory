@@ -6,67 +6,80 @@ const employees = [
 		firstName: "Aoba",
 		lastName: "Suzukaze",
 		title: "Character Designer",
-		department: "Graphics"
+		department: "Graphics",
+		company: "Eagle Jump"
 	},
 	{
 		firstName: "Kou",
 		lastName: "Yagami",
 		title: "Art Director",
-		department: "Graphics"
+		department: "Graphics",
+		company: "Eagle Jump"
 	},
 	{
 		firstName: "Hifumi",
 		lastName: "Takimoto",
 		title: "Character Design Team Leader",
-		department: "Graphics"
+		department: "Graphics",
+		company: "Eagle Jump"
 	},
 	{
 		firstName: "Rin",
 		lastName: "Touyama",
 		title: "Assistant Producer",
-		department: "Production"
+		department: "Production",
+		company: "Eagle Jump"
 	},
 	{
 		firstName: "Umiko",
 		lastName: "Ahagon",
 		title: "Chief Programmer",
-		department: "Programming"
+		department: "Programming",
+		company: "Eagle Jump"
 	},
 	{
 		firstName: "Nene",
 		lastName: "Sakura",
 		title: "Intern Programmer",
-		department: "Programming"
+		department: "Programming",
+		company: "Eagle Jump"
 	},
 	{
 		firstName: "Hajime",
 		lastName: "Shinoda",
 		title: "Motion Designer",
-		department: "Motion"
+		department: "Motion",
+		company: "Eagle Jump"
 	},
 	{
 		firstName: "Tsubame",
 		lastName: "Narumi",
 		title: "Intern Programmer",
-		department: "Programming"
+		department: "Programming",
+		company: "Eagle Jump"
 	},
 	{
 		firstName: "Momiji",
 		lastName: "Mochizuki",
 		title: "Intern Character Designer",
-		department: "Graphics"
+		department: "Graphics",
+		company: "Eagle Jump"
 	},
 	{
 		firstName: "Yun",
 		lastName: "Iijima",
 		title: "Character Designer",
-		department: "Graphics"
+		department: "Graphics",
+		company: "Eagle Jump"
 	}
 ];
 connect(process.env.MONGODB_URI || "mongodb://localhost/employee-directory").then((conn) => {
 	if (process.env.NODE_ENV === "production") {
-		Employee.insertMany(employees).then((res) => {
-			disconnect();
+		Employee.deleteMany({ company: "Eagle Jump" }).then(() => {
+			Employee.insertMany(employees).then((res) => {
+				console.log(res);
+				disconnect();
+			});
 		});
 	} else {
 		Employee.deleteMany({}).then(() => {

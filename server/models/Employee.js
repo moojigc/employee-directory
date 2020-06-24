@@ -3,20 +3,24 @@ const { Schema, model } = require("mongoose");
 const EmployeeSchema = new Schema({
 	firstName: {
 		type: String,
-		trim: true
+		trim: true,
+		required: true
 	},
 	lastName: {
 		type: String,
-		trim: true
+		trim: true,
+		required: true
 	},
 	title: {
 		type: String,
 		trim: true,
-		default: "Employee"
+		default: "Employee",
+		required: true
 	},
 	department: {
 		type: String,
-		trim: true
+		trim: true,
+		required: true
 	},
 	createdAt: {
 		type: Date,
@@ -28,8 +32,7 @@ const EmployeeSchema = new Schema({
 	company: {
 		type: String,
 		required: true,
-		trim: true,
-		default: "Demo"
+		trim: true
 	}
 });
 const Employee = model("Employee", EmployeeSchema);

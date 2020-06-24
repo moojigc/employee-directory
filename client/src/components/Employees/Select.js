@@ -8,7 +8,10 @@ const Select = ({ handleFilter, options, label, defaultOption }) => {
 					Filter by {label}
 				</label>
 			</div>
-			<select htmlFor={`filter-by-${label}`} className="browser-default">
+			<select
+				onChange={handleFilter}
+				htmlFor={`filter-by-${label}`}
+				className="browser-default">
 				<option value="*" disabled defaultValue>
 					Choose {label}
 				</option>
