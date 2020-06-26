@@ -4,6 +4,7 @@
   "description": "> Developed by Moojig Battsogt.",
   "main": "server.js",
   "scripts": {
+    "install": "npm install && cd client/ && npm install",
     "build": "cd client && npm run build",
     "watch": "concurrently \"nodemon --ignore \"./client/\" server.js\" \"cd client && npm start\"",
     "test": "echo \"Error: no test specified\" && exit 1",
