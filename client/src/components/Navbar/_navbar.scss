@@ -1,8 +1,8 @@
 nav {
-	background: var(--primary) !important;
+	background: $primary !important;
 }
 .brand-logo {
-	font-family: var(--fancy-font);
+	font-family: $fancyFont;
 }
 
 #logo-desktop {

@@ -40,7 +40,13 @@ const UserSchema = new Schema({
 			type: Array,
 			ref: "Employee"
 		}
-	]
+	],
+	company: {
+		type: String,
+		required: true,
+		trim: true,
+		unique: true
+	}
 });
 
 UserSchema.methods.encryptPass = async function () {

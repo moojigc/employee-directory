@@ -1,141 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Preloader from "../Preloader";
-import "./index.css";
 import Axios from "axios";
 import { Dropdown } from "materialize-css";
-import { useHistory } from "react-router-dom";
+import Employee from "./Employee";
 
-const List = ({ setFlash, getAllEmployees, emFilter, company }) => {
-	const Employee = ({ form, name, title, department }) => {
-		const history = useHistory();
-		const [newFirstName, setFirstName] = useState("");
-		const [newLastName, setLastName] = useState("");
-		const [newTitle, setTitle] = useState("");
-		const [newDept, setDept] = useState("");
-		const addEmployee = async (event) => {
-			event.preventDefault();
-			let { data } = await Axios({
-				method: "POST",
-				data: {
-					firstName: newFirstName,
-					lastName: newLastName,
-					title: newTitle,
-					department: newDept,
-					company: company
-				},
-				withCredentials: true,
-				url: "/api/employees"
-			});
-			console.log(data);
-			setFlash(data.flash);
-			if (data.flash.type === "error") {
-				history.push(data.redirect);
-			}
-			getAllEmployees();
-		};
-		return (
-			<div style={{ width: "100%" }}>
-				<div
-					style={{
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "baseline"
-					}}>
-					<div
-						style={{
-							marginBottom: "0",
-							fontWeight: "bolder",
-							fontSize: "1.5rem"
-						}}>
-						{form ? (
-							<div
-								style={{
-									width: "auto",
-									display: "flex",
-									justifyContent: "space-between"
-								}}>
-								<input
-									required
-									className="validate"
-									name="firstName"
-									style={{ width: "90%", marginRight: "0.25rem" }}
-									onChange={({ target }) => setFirstName(target.value)}
-									type="text"
-									placeholder="First name"
-								/>
-								<input
-									required
-									className="validate"
-									name="lastName"
-									style={{ width: "90%" }}
-									onChange={({ target }) => setLastName(target.value)}
-									type="text"
-									placeholder="Last name"
-								/>
-							</div>
-						) : (
-							<p>{name}</p>
-						)}
-					</div>
-					<span style={{ marginBottom: "0", textAlign: "right" }}>
-						{form ? (
-							<input
-								required
-								className="validate"
-								name="title"
-								onChange={({ target }) => setTitle(target.value)}
-								type="text"
-								placeholder="Title"
-							/>
-						) : (
-							title
-						)}
-					</span>
-				</div>
-				<hr style={{ width: "100%", borderColor: "var(--accent)" }} />
-				<p style={{ marginTop: "0" }}>
-					{form ? (
-						<input
-							required
-							className="validate"
-							name="department"
-							onChange={({ target }) => setDept(target.value)}
-							type="text"
-							placeholder="Department"
-						/>
-					) : (
-						<span>
-							<b>{department}</b> Department
-						</span>
-					)}
-				</p>
-				{form ? (
-					<button
-						type="submit"
-						onClick={addEmployee}
-						className="btn waves-effect waves-light">
-						Submit<i className="material-icons right">send</i>
-					</button>
-				) : null}
-			</div>
-		);
-	};
+const List = ({
+	departments,
+	setDepartments,
+	setFlash,
+	getAllEmployees,
+	emFilter,
+	setEmFilter,
+	company,
+	setEmployees,
+	employees
+}) => {
 	useEffect(() => {
 		// MaterializeCSS
 		Dropdown.init(document.querySelectorAll(".dropdown-trigger"), {
 			coverTrigger: false
 		});
 	});
+	const handleDelete = async (id) => {
+		let { data } = await Axios({
+			method: "DELETE",
+			url: "/api/employee/" + id
+		});
+		setEmFilter(emFilter.filter((em) => em._id !== data.employee._id));
+		// setEmployees(employees.filter((em) => em._id !== data.employee._id));
+		let currDepts = emFilter.filter((em) => em.department === data.employee.department);
+		if (!currDepts.length)
+			setDepartments(departments.filter((dept) => dept !== data.employee.department));
+	};
 	return (
-		<ul
-			style={{ border: "unset", borderRadius: "0.25rem" }}
-			className={emFilter.length > 0 ? "collection" : ""}>
+		<ul style={{ border: "unset", borderRadius: "0.25rem" }} className="collection">
 			{emFilter.length > 0 ? (
 				emFilter.map((em, i) => (
 					<li className="collection-item" key={em._id}>
 						<ul id={"dropdown" + i} className="dropdown-content">
 							<li>
 								<button
+									onClick={() => handleDelete(em._id)}
 									className="btn"
 									style={{
 										textTransform: "unset",
@@ -161,19 +66,38 @@ const List = ({ setFlash, getAllEmployees, emFilter, company }) => {
 							<i className="material-icons">menu</i>
 						</button>
 						<Employee
+							employees={employees}
+							setEmployees={setEmployees}
+							setDepartments={setDepartments}
+							setEmFilter={setEmFilter}
+							emFilter={emFilter}
+							setFlash={setFlash}
+							getAllEmployees={getAllEmployees}
 							name={em.firstName + " " + em.lastName}
 							title={em.title}
 							department={em.department}
+							company={company}
 						/>
 					</li>
 				))
-			) : (
+			) : employees.length > 0 ? (
 				<Preloader />
-			)}
+			) : null}
 			<li className="collection-item">
 				<form>
 					<h5 style={{ textAlign: "center" }}>Add new employee</h5>
-					<Employee form={true} />
+					<Employee
+						setEmployees={setEmployees}
+						employees={employees}
+						setDepartments={setDepartments}
+						departments={departments}
+						setEmFilter={setEmFilter}
+						emFilter={emFilter}
+						form={true}
+						setFlash={setFlash}
+						getAllEmployees={getAllEmployees}
+						company={company}
+					/>
 				</form>
 			</li>
 		</ul>

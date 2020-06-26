@@ -1,3 +1,8 @@
+@mixin alertType($background, $border) {
+	border: 1px solid $border;
+	background: $background;
+}
+
 .alert {
 	color: black;
 	font-size: 1.5rem;
@@ -8,11 +13,9 @@
 }
 
 .alert-success {
-	border: 1px solid green;
-	background: lightgreen;
+	@include alertType(lightgreen, green);
 }
 
 .alert-error {
-	border: 1px solid red;
-	background: pink;
+	@include alertType(pink, red);
 }

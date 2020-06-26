@@ -1,7 +1,12 @@
+.inner-wrapper,
 main {
 	padding: 1rem 2rem;
 	border-radius: 0 0 0.25rem 0.25rem;
-	background: var(--primary);
+	background: $primary;
+}
+.inner-wrapper {
+	border-radius: 0.25rem;
+	margin: 0 auto;
 }
 
 @media screen and (max-width: 992px) {

@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "cd client && npm run build",
-    "watch": "concurrently \"nodemon server.js\" \"cd client && npm start\"",
+    "watch": "concurrently \"nodemon --ignore \"./client/\" server.js\" \"cd client && npm start\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "seed": "cd server/seeders && node seed.js"
@@ -34,11 +34,11 @@
   },
   "devDependencies": {
     "axios": "^0.19.2",
+    "concurrently": "^5.2.0",
     "materialize-css": "^1.0.0-rc.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
-    "concurrently": "^5.2.0"
+    "react-scripts": "3.4.1"
   }
 }

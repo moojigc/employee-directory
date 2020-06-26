@@ -1,17 +1,25 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import UserContext from "../../utils/UserContext";
-import "./index.css";
+import { useUserContext } from "../../utils/UserContext";
 import axios from "axios";
+import { useFlashContext } from "../../utils/FlashContext";
 
-const Navbar = ({ setFlash, setUser }) => {
-	const user = useContext(UserContext);
+const Navbar = () => {
+	const [_, dispatchFlash] = useFlashContext();
 	const location = useLocation();
+	const [user, dispatchUser] = useUserContext();
 	const handleLogout = async () => {
 		let { data } = await axios.get("/api/logout", { withCredentials: true });
-		setFlash(data.flash);
-		setUser({ username: "Guest", _id: null, auth: false });
+		dispatchFlash({ flash: data.flash });
+		dispatchUser({ user: data.user });
 	};
+	useEffect(() => {
+		const capitalize = (input = "") => input.substring(1)[0].toUpperCase() + input.substring(2);
+		document.title =
+			location.pathname !== "/"
+				? `${capitalize(location.pathname)} - Employee Directory`
+				: "Employee Directory";
+	}, [location.pathname]);
 	return (
 		<nav>
 			<div className="nav-wrapper">

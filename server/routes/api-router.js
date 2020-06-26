@@ -1,34 +1,98 @@
 const { User, Employee } = require("../models/");
 const passport = require("../config/passport");
 const isAuth = require("../config/middleware/isAuth");
+const { ObjectId } = require("mongoose").Types;
+/**
+ *
+ * @param {string} message
+ * @param {"error" | "success"} type
+ */
+const flash = (message, type) => {
+	return {
+		flash: {
+			message: message,
+			type: type
+		}
+	};
+};
 
 /**
  * Respond to /api/ calls from the client
  * @param {import("express").Router} router
  */
 module.exports = (router) => {
-	router.get("/api/employees", async (req, res) => {
-		const employees = await Employee.find({});
+	router.get("/api/employees/:company", async (req, res) => {
+		const employees = await Employee.find({ company: req.params.company });
 		res.status(200).json(employees).end();
 	});
 	router.get("/api/employees-demo", async (req, res) => {
 		const employees = await Employee.find({ company: "Eagle Jump" });
 		res.status(200).json(employees).end();
 	});
+	router.delete("/api/employee/:id", async (req, res) => {
+		if (!req.user) {
+			return res.json({
+				flash: {
+					message: "Must be logged in.",
+					type: "error"
+				}
+			});
+		}
+		try {
+			const deletion = await Employee.findByIdAndDelete({ _id: ObjectId(req.params.id) });
+			res.json({
+				flash: {
+					message: `Deleted employee with ID ${req.params.id}`,
+					type: "success"
+				},
+				employee: { ...deletion._doc }
+			}).end();
+		} catch (error) {
+			res.json({
+				flash: {
+					message: `Internal server error.`,
+					type: "error"
+				}
+			}).end();
+		}
+	});
 	router.post("/api/register", async ({ body }, res) => {
+		const isInvalid =
+			Object.values(body).filter((field) => field === null || field === "").length > 0
+				? true
+				: false;
+		if (isInvalid) {
+			res.json({
+				...flash("Missing fields.", "error"),
+				redirect: "/register"
+			});
+			return;
+		}
 		if (body.password === body.password2) {
 			let user = new User({
 				username: body.username,
 				email: body.email,
-				password: body.password
+				password: body.password,
+				company: body.company
 			});
-			await user.encryptPass();
-			let response = await User.create(user.toObject());
-			if (response)
-				res.status(200).json({ message: `Welcome ${body.username}!`, redirect: "/login" });
-			else res.status(500).json({ message: "Internal server error.", redirect: "/register" });
+			try {
+				await user.encryptPass();
+				await User.create(user.toObject());
+				res.status(200).json({
+					...flash(`Welcome, ${body.username}!`, "success"),
+					redirect: "/login"
+				});
+			} catch (error) {
+				let fields = Object.keys(error.keyValue);
+				let field = fields.length > 0 ? fields[0] : null;
+				res.json({
+					...flash(`User with that ${field} already exists!`, "error"),
+					success: false,
+					redirect: "/register"
+				});
+			}
 		} else {
-			res.json({ message: "Passwords must match!", redirect: "/register" });
+			res.json({ ...flash("Passwords must match!", "error"), redirect: "/register" });
 		}
 	});
 	router.post("/api/login", (req, res, next) => {
@@ -41,7 +105,8 @@ module.exports = (router) => {
 					},
 					user: {
 						auth: false
-					}
+					},
+					redirect: "/login"
 				});
 			}
 			if (!user) {
@@ -52,7 +117,8 @@ module.exports = (router) => {
 					},
 					user: {
 						auth: false
-					}
+					},
+					redirect: "/login"
 				});
 			}
 			req.logIn(user, function (err) {
@@ -63,12 +129,14 @@ module.exports = (router) => {
 					user: {
 						_id: user._id,
 						username: user.username,
+						company: user.company,
 						auth: true
 					},
 					flash: {
 						type: "success",
 						message: `Welcome, ${req.user.username}!`
-					}
+					},
+					redirect: "/"
 				});
 			});
 		})(req, res, next);
@@ -76,13 +144,16 @@ module.exports = (router) => {
 	router.get("/api/user-status", (req, res) => {
 		switch (!!req.user) {
 			case true:
-				res.status(200)
-					.json({ ...req.user, auth: true })
-					.end();
+				res.status(200).json(req.user).end();
 				break;
 			default:
 			case false:
-				res.json({ username: "Guest", password: "", auth: false }).end();
+				res.json({
+					_id: null,
+					username: "Guest",
+					company: "Eagle Jump",
+					auth: false
+				}).end();
 				break;
 		}
 	});
@@ -90,6 +161,7 @@ module.exports = (router) => {
 		req.logout();
 		res.json({
 			user: {
+				username: "Guest",
 				auth: false
 			},
 			flash: {
@@ -100,39 +172,25 @@ module.exports = (router) => {
 		});
 	});
 	router.post("/api/employees", async (req, res) => {
-		if (!req.user)
+		if (!req.user) {
 			return res.json({
-				flash: {
-					type: "error",
-					message: "You need to be logged in to add an employee."
-				},
+				...flash("You must login to add employees.", "error"),
 				redirect: "/login"
 			});
+		}
 		try {
 			let response = await Employee.create(req.body);
 			res.json({
-				flash: {
-					message: "Successfully added employee!",
-					type: "success"
-				},
-				employee: req.body
+				...flash(`Sucessfully added ${response.firstName} ${response.lastName}!`),
+				employee: response
 			});
 		} catch (error) {
-			console.log(error);
 			if (error._message === "Employee validation failed") {
 				res.json({
-					flash: {
-						type: "error",
-						message: "Missing fields."
-					}
+					...flash("Missing fields.", "error")
 				});
 			} else {
-				res.json({
-					flash: {
-						type: "error",
-						message: "Database error."
-					}
-				});
+				res.json(flash("Internal server error.", "error"));
 			}
 		}
 	});

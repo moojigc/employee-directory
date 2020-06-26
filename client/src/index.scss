@@ -1,0 +1,43 @@
+@import "./materialize/materialize";
+@import "./components/Alert/alert";
+@import "./components/Container/container";
+@import "./components/Employees/employee";
+@import "./components/Main/main";
+@import "./components/Navbar/navbar";
+@import "./components/Register/register";
+:root {
+	margin: 0;
+	font-size: 20px;
+	font-family: "Lato", sans-serif;
+	--fancy-font: "Lemonada", serif;
+	--primary: #162447;
+	--secondary: #1f4068;
+	--third: #1b1b2f;
+	--accent: #e43f5a;
+	--transluscent: #f5f5f5ad;
+}
+body {
+	background: $secondary;
+}
+input {
+	color: whitesmoke;
+}
+label {
+	color: lightgray !important;
+}
+header {
+	border-radius: 0.25rem 0.25rem 0 0;
+	text-align: center;
+	background-color: $accent;
+	padding: 1rem;
+	h1 {
+		font-family: $fancyFont;
+		margin: 0;
+		font-size: 3rem;
+	}
+}
+@media screen and (max-width: 992px) {
+	:root {
+		font-size: 16px;
+	}
+}
