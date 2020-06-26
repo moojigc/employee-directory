@@ -14,9 +14,9 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "sass": "cd src/ && node-sass --output-style=compressed index.scss index.css",
+    "sass": "sass --style=compressed src/index.scss src/index.css",
     "start": "react-scripts start",
-    "build": "npm run sass && react-scripts build",
+    "build": "eact-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
