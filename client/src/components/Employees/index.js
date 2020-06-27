@@ -63,7 +63,7 @@ const Employees = ({ setFlash }) => {
 		);
 	};
 	useEffect(() => {
-		if (user.auth) getAllEmployees();
+		getAllEmployees();
 		return () => setEmployees([]);
 	}, [user]);
 	return (
