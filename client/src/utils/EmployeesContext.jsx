@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useContext } from "react";
-import axios from "axios";
+import { axios } from "./api";
 
 const EmployeesContext = createContext([
 	{
@@ -8,8 +8,8 @@ const EmployeesContext = createContext([
 		lastName: "",
 		company: "",
 		department: "",
-		title: ""
-	}
+		title: "",
+	},
 ]);
 const { Provider } = EmployeesContext;
 
@@ -26,17 +26,23 @@ const reducer = (employees, action) => {
 			});
 			break;
 		case "delete":
-			axios({ url: "/api/employee/" + action.id, method: "DELETE" }).then(({ data }) => {
-				return employees.filter((em) => em._id !== data.employee._id);
-			});
-			break;
-		case "post":
-			axios({ url: "/api/employees", method: "POST", data: action.employee }).then(
+			axios({ url: "/api/employee/" + action.id, method: "DELETE" }).then(
 				({ data }) => {
-					employees = employees.slice(0).push(data);
-					return employees;
+					return employees.filter(
+						(em) => em._id !== data.employee._id
+					);
 				}
 			);
+			break;
+		case "post":
+			axios({
+				url: "/api/employees",
+				method: "POST",
+				data: action.employee,
+			}).then(({ data }) => {
+				employees = employees.slice(0).push(data);
+				return employees;
+			});
 			break;
 		default:
 			throw new Error(`Invalid action type: ${action.type}`);

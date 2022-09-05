@@ -1,13 +1,13 @@
 import React, { createContext, useReducer, useContext } from "react";
-import { Types } from "mongoose";
+
 /**
  * user data from the server
  */
 const UserContext = createContext({
-	_id: Types.ObjectId(),
+	_id: "",
 	username: "",
 	company: "",
-	auth: false
+	auth: false,
 });
 const { Provider } = UserContext;
 

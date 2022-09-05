@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "cd client && npm run build",
-    "watch": "concurrently \"nodemon --ignore \"./client/\" server.js\" \"cd client && npm start\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon server.js && cd client && npm start",
     "start": "node server.js",
     "seed": "cd server/seeders && node seed.js"
   },
@@ -24,22 +23,17 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
-    "connect-mongodb-session": "^2.3.3",
+    "connect-mongodb-session": "^3.1.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "mongoose": "^5.9.19",
     "morgan": "^1.10.0",
-    "passport": "^0.4.1",
+    "passport": "^0.6.0",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "axios": "^0.19.2",
-    "concurrently": "^5.2.0",
-    "materialize-css": "^1.0.0-rc.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1"
+    "nodemon": "^2.0.19"
   }
 }

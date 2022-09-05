@@ -23,7 +23,7 @@ jobs:
             --header 'X-Webhook-Password: '$WEBHOOK_PASS'' \
             --header 'Content-Type: application/json' \
             --data-raw '{
-                "cmd": "portfolio/employee-directory"
+                "cmd": "portfolio/employee-directory --stack=portfolio --container=name=employee-directory"
             }'
 workflows:
   build:
