@@ -15,7 +15,7 @@
   "scripts": {
     "sass": "sass --style=compressed src/index.scss src/index.css",
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "build:prod": "npm run build",
     "serve": "vite preview"
   },
